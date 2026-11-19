@@ -109,4 +109,72 @@ describe('MascotteStatut', () => {
     expect(s.humeurImposee()).toBeNull();
     expect(s.humeur()).toBe('cadeau');
   });
+
+  describe('explosion', () => {
+    /** Amène la mascotte à un cheveu du gavage, puis lui donne la croquette de trop. */
+    const gaver = (g: Bowl) => {
+      s.faim.set(0);
+      s.surpoids.set(s.surpoidsMax - 1);
+      s.manger(g);
+    };
+
+    it('gavée, elle tremble puis explose, disparaît, et revient toute petite 10 s après', () => {
+      gaver(gamelle());
+      expect(s.humeur()).toBe('gave');
+      expect(s.phase()).toBe('normal');
+
+      vi.advanceTimersByTime(1500);
+      expect(s.phase()).toBe('explosion');
+      expect(s.bandeau()?.texte).toContain('BOUM');
+
+      vi.advanceTimersByTime(1000);
+      expect(s.phase()).toBe('absent');
+
+      vi.advanceTimersByTime(8999);
+      expect(s.phase()).toBe('absent');
+      vi.advanceTimersByTime(1);
+      expect(s.phase()).toBe('normal');
+      expect(s.taille()).toBe(0);
+      expect(s.echelle()).toBe(0.5);
+      expect(s.surpoids()).toBe(0);
+      expect(s.faim()).toBe(5);
+    });
+
+    it('ne mange plus tant qu’elle est en train d’exploser ou absente', () => {
+      const g = gamelle();
+      gaver(g);
+      vi.advanceTimersByTime(1500);
+      expect(s.manger(g)).toBe(false);
+      vi.advanceTimersByTime(1000);
+      expect(s.manger(g)).toBe(false);
+    });
+
+    it('lui voler sa nourriture avant le BOUM annule l’explosion', () => {
+      const g = gamelle();
+      gaver(g);
+      s.voler(g);
+      vi.advanceTimersByTime(20000);
+      expect(s.phase()).toBe('normal');
+      expect(s.taille()).toBe(5);
+    });
+
+    it('un petit grandit à chaque repas jusqu’à sa taille normale, sans grossir', () => {
+      const g = gamelle();
+      s.taille.set(0);
+      s.faim.set(5);
+      for (let i = 1; i <= s.tailleMax; i++) {
+        expect(s.manger(g)).toBe(true);
+        expect(s.taille()).toBe(i);
+      }
+      expect(s.isPetit()).toBe(false);
+      expect(s.echelle()).toBe(1);
+      expect(s.surpoids()).toBe(0);
+      expect(s.faim()).toBe(0);
+    });
+
+    it('invite à nourrir un petit', () => {
+      s.taille.set(1);
+      expect(s.bandeau()?.texte).toContain('NOURRIS-MOI');
+    });
+  });
 });

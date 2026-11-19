@@ -17,6 +17,9 @@ const FEUILLES = [
   { e: '🍁', left: 92, duree: 12, retard: 3 },
 ];
 
+/** Éclats projetés par l'explosion (un par direction, tous les 45°). */
+const ECLATS = ['🍖', '✨', '💥', '🦴', '🍖', '✨', '💥', '🦴'];
+
 /** Scène en trois couches : fond, objets, personnage (devant). */
 @Component({
   selector: 'app-scene',
@@ -29,4 +32,5 @@ export class Scene {
   protected readonly statut = inject(MascotteStatut);
   protected readonly objects = signal<SceneObject[]>(createDefaultObjects());
   protected readonly feuilles = FEUILLES;
+  protected readonly eclats = ECLATS;
 }

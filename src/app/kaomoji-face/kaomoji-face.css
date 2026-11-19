@@ -1,5 +1,5 @@
-/* Personnage agrandi de 50 % (zoom : la mise en page suit, contrairement à scale) */
-:host { display: inline-block; zoom: 1.5; }
+/* Taille : zoom posé par le composant (base ×1,5, × l'échelle de croissance). Le zoom, contrairement à scale, fait suivre la mise en page. */
+:host { display: inline-block; transition: zoom 0.6s ease; }
 /* isolation : les oreilles (z-index négatif) restent derrière la bulle mais devant la scène */
 .zone { position: relative; isolation: isolate; animation: rebond 2.6s ease-in-out infinite; }
 

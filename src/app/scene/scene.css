@@ -71,6 +71,36 @@
 .stop-4 { animation-duration: 0.2s; }
 .stop-5 { animation-duration: 0.1s; }
 
+/* Place du personnage (218px = bulle de 145px × 1,5) quand il explose ou qu'il est absent */
+.espace {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 218px;
+    height: 218px;
+}
+.boum { font-size: 150px; animation: boum 1s ease-out forwards; }
+.eclat {
+    position: absolute;
+    font-size: 30px;
+    animation: eclat 1s ease-out forwards;
+}
+/* Texte façon bande dessinée, par-dessus l'explosion */
+.macron {
+    position: absolute;
+    z-index: 2;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    color: #ffe14d;
+    text-shadow: -2px -2px 0 #55352c, 2px -2px 0 #55352c, -2px 2px 0 #55352c, 3px 3px 0 #bd392e;
+    transform: rotate(-8deg);
+    animation: macron 1s ease-out forwards;
+}
+.apparition { animation: pop 0.6s ease-out; }
+
 /* Légende : statut vital */
 .legende {
     display: flex;
@@ -99,8 +129,28 @@
     90% { opacity: 0.8; }
     100% { transform: translate(-10px, 105vh) rotate(360deg); opacity: 0; }
 }
+@keyframes boum {
+    0% { transform: scale(0.2); opacity: 1; }
+    40% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes macron {
+    0% { transform: rotate(-8deg) scale(0.3); opacity: 0; }
+    20% { transform: rotate(-8deg) scale(1.25); opacity: 1; }
+    75% { transform: rotate(-8deg) scale(1); opacity: 1; }
+    100% { transform: rotate(-8deg) scale(1); opacity: 0; }
+}
+@keyframes eclat {
+    from { transform: rotate(calc(var(--a) * 1deg)) translateY(0); opacity: 1; }
+    to { transform: rotate(calc(var(--a) * 1deg)) translateY(-170px); opacity: 0; }
+}
+@keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
 @keyframes bandeauTremble { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-    .feuille, .bandeau { animation: none !important; }
+    .feuille, .bandeau, .boum, .eclat, .macron, .apparition { animation: none !important; }
 }

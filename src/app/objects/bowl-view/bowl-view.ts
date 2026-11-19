@@ -34,10 +34,13 @@ export class BowlView {
     POSITIONS.slice(0, Math.min(this.bowl().level(), POSITIONS.length)),
   );
 
-  protected readonly nourrirDesactive = computed(() => this.bowl().isEmpty() || this.statut.isGave());
+  protected readonly nourrirDesactive = computed(
+    () => this.bowl().isEmpty() || this.statut.isGave() || this.statut.phase() !== 'normal',
+  );
 
   protected readonly message = computed(() => {
     const b = this.bowl();
+    if (this.statut.phase() !== 'normal') return 'Il n’est pas là… 💫';
     if (this.statut.isGave()) return 'Elle va exploser ! 🤢';
     if (b.isEmpty()) return 'Gamelle vide ! 😿';
     if (this.statut.faim() <= 0) return 'Plus faim… attention ! 😬';

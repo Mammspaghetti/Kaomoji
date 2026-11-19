@@ -4,6 +4,14 @@ import { Bowl } from './objects/bowl';
 
 const DUREE_COURTE = 2500;
 const DUREE_JALOUSIE = 10000;
+/** Gavée, elle tremble un instant avant d'exploser. */
+const DUREE_GAVE = 1500;
+const DUREE_EXPLOSION = 1000;
+/** Délai entre l'explosion et sa réapparition. */
+const DUREE_ABSENCE = 10000;
+
+/** normal : présente · explosion : le BOUM · absent : elle va réapparaître, toute petite. */
+export type Phase = 'normal' | 'explosion' | 'absent';
 
 /** Texte affiché au-dessus du personnage : message temporaire ou « STOP » de plus en plus gros. */
 export interface Bandeau {
@@ -22,6 +30,8 @@ export class MascotteStatut {
   readonly faimMax = 5;
   readonly surpoidsMax = 5;
   readonly jalousieMax = 3;
+  /** Nombre de repas pour qu'un petit atteigne sa taille normale. */
+  readonly tailleMax = 5;
 
   /** 0 = rassasiée, 5 = affamée. Au-delà de 2 elle est grognon. */
   readonly faim = signal(2);
@@ -31,6 +41,10 @@ export class MascotteStatut {
   /** Monte quand un rival reçoit un cadeau, baisse quand elle en reçoit un. */
   readonly niveauJalousie = signal(0);
   readonly humeurImposee = signal<Humeur | null>(null);
+
+  /** Taille de 0 (tout petit, après une explosion) à `tailleMax` (normale). On grandit en mangeant. */
+  readonly taille = signal(5);
+  readonly phase = signal<Phase>('normal');
 
   // États temporaires
   readonly isTriste = signal(false);
@@ -42,6 +56,9 @@ export class MascotteStatut {
 
   readonly isGros = computed(() => this.surpoids() > 0);
   readonly isGave = computed(() => this.surpoids() >= this.surpoidsMax);
+  /** Facteur d'échelle du personnage : 0,5 pour un petit, 1 à taille normale. */
+  readonly echelle = computed(() => 0.5 + (0.5 * this.taille()) / this.tailleMax);
+  readonly isPetit = computed(() => this.taille() < this.tailleMax);
   readonly isTresJaloux = computed(() => this.niveauJalousie() >= this.jalousieMax);
   readonly isGrognon = computed(() => this.faim() > 2 || this.isReclame());
   readonly isTresGrognon = computed(() => this.isGrognon() && this.cadeaux() === 0);
@@ -62,8 +79,13 @@ export class MascotteStatut {
   readonly humeur = computed(() => this.humeurImposee() ?? this.humeurCalculee());
 
   readonly bandeau = computed<Bandeau | null>(() => {
+    if (this.phase() === 'explosion') return { texte: 'BOUM ! 💥', type: 'message', niveau: 0 };
+    if (this.phase() === 'absent') {
+      return { texte: 'Il va revenir, tout petit… 💫', type: 'message', niveau: 0 };
+    }
     if (this.isVole()) return { texte: 'C’EST MAL DE VOLER ! 😡', type: 'message', niveau: 0 };
     if (this.message()) return { texte: this.message(), type: 'message', niveau: 0 };
+    if (this.isPetit()) return { texte: 'NOURRIS-MOI POUR GRANDIR ! 🍖', type: 'message', niveau: 0 };
     if (this.isTresJaloux()) {
       return { texte: 'C’EST TOUJOURS LES AUTRES ! 💚😡', type: 'message', niveau: 0 };
     }
@@ -75,9 +97,13 @@ export class MascotteStatut {
   });
 
   private readonly timers = new Map<object, ReturnType<typeof setTimeout>>();
+  private timerPhase?: ReturnType<typeof setTimeout>;
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.timers.forEach((t) => clearTimeout(t)));
+    inject(DestroyRef).onDestroy(() => {
+      this.timers.forEach((t) => clearTimeout(t));
+      clearTimeout(this.timerPhase);
+    });
   }
 
   /** Impose une humeur (ou `null` pour revenir au calcul automatique). */
@@ -85,16 +111,24 @@ export class MascotteStatut {
     this.humeurImposee.set(humeur);
   }
 
-  /** La gamelle sert une croquette. Renvoie false si elle est vide ou si la mascotte est gavée. */
+  /**
+   * La gamelle sert une croquette. Un petit grandit à chaque repas ; à taille normale, trop manger
+   * la fait grossir puis exploser. Renvoie false si elle est vide, si la mascotte est gavée ou absente.
+   */
   manger(gamelle: Bowl): boolean {
-    if (gamelle.isEmpty() || this.isGave()) return false;
+    if (this.phase() !== 'normal' || gamelle.isEmpty() || this.isGave()) return false;
     gamelle.take();
     this.imposer(null);
-    if (this.faim() > 0) {
+    if (this.isPetit()) {
+      this.taille.update((t) => t + 1);
+      if (this.faim() > 0) this.faim.update((f) => f - 1);
+      if (!this.isPetit()) this.afficher('JE SUIS GRAND ! 🎉');
+    } else if (this.faim() > 0) {
       this.faim.update((f) => f - 1);
     } else {
       this.surpoids.update((s) => s + 1);
       this.afficher(this.isGave() ? 'JE VAIS EXPLOSER ! 🤢' : 'J’AI PLUS FAIM ! 🐷');
+      if (this.isGave()) this.programmerExplosion();
     }
     return true;
   }
@@ -141,6 +175,31 @@ export class MascotteStatut {
     this.niveauJalousie.update((n) => Math.min(this.jalousieMax, n + 1));
     this.afficher('Une autre mascotte a reçu un cadeau ?! ET MOI ?! 😤', DUREE_JALOUSIE);
     this.programmer(this.isJaloux, true, false, DUREE_JALOUSIE);
+  }
+
+  /** Gavée → BOUM → absente → réapparaît toute petite. Voler la nourriture à temps l'annule. */
+  private programmerExplosion(): void {
+    clearTimeout(this.timerPhase);
+    this.timerPhase = setTimeout(() => {
+      if (!this.isGave()) return;
+      this.phase.set('explosion');
+      this.timerPhase = setTimeout(() => {
+        this.phase.set('absent');
+        this.timerPhase = setTimeout(
+          () => this.reapparaitre(),
+          DUREE_ABSENCE - DUREE_EXPLOSION,
+        );
+      }, DUREE_EXPLOSION);
+    }, DUREE_GAVE);
+  }
+
+  private reapparaitre(): void {
+    this.phase.set('normal');
+    this.surpoids.set(0);
+    this.taille.set(0);
+    this.faim.set(this.faimMax);
+    this.imposer(null);
+    this.afficher('ME REVOILÀ ! 🐣', DUREE_COURTE);
   }
 
   private afficher(texte: string, ms = DUREE_COURTE): void {

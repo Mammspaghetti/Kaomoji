@@ -63,4 +63,30 @@ describe('Scene', () => {
     expect(TestBed.inject(MascotteStatut).humeur()).toBe('grognon');
     expect(el.querySelector('.bandeau')?.textContent).toContain('VOLER');
   });
+
+  it('montre une explosion à la place du personnage, puis une place vide', async () => {
+    const statut = TestBed.inject(MascotteStatut);
+    statut.phase.set('explosion');
+    await fixture.whenStable();
+    expect(el.querySelector('app-kaomoji-face')).toBeNull();
+    expect(el.querySelector('.boum')).toBeTruthy();
+    expect(el.querySelectorAll('.eclat').length).toBe(8);
+    expect(el.querySelector('.macron')?.textContent).toBe('MACRON EXPLOSION');
+
+    statut.phase.set('absent');
+    await fixture.whenStable();
+    expect(el.querySelector('.boum')).toBeNull();
+    expect(el.querySelector('.macron')).toBeNull();
+    expect(el.querySelector('.espace')).toBeTruthy();
+
+    statut.phase.set('normal');
+    await fixture.whenStable();
+    expect(el.querySelector('app-kaomoji-face')).toBeTruthy();
+  });
+
+  it('indique la croissance d’un petit dans la légende', async () => {
+    TestBed.inject(MascotteStatut).taille.set(2);
+    await fixture.whenStable();
+    expect(el.querySelector('.legende')?.textContent).toContain('Croissance : 2/5');
+  });
 });

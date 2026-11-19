@@ -35,15 +35,38 @@
         }
     </div>
 
-    <app-kaomoji-face
-        [humeur]="etat.humeur()"
-        [visage]="etat.visage()"
-        [reclame]="statut.isReclame()"
-    />
+    <!-- Le personnage, son explosion, ou la place vide en attendant qu'il revienne -->
+    @switch (statut.phase()) {
+        @case ('normal') {
+            <div class="apparition">
+                <app-kaomoji-face
+                    [humeur]="etat.humeur()"
+                    [visage]="etat.visage()"
+                    [reclame]="statut.isReclame()"
+                    [echelle]="statut.echelle()"
+                />
+            </div>
+        }
+        @case ('explosion') {
+            <div class="espace" aria-hidden="true">
+                <span class="boum">💥</span>
+                <span class="macron">MACRON EXPLOSION</span>
+                @for (e of eclats; track $index) {
+                    <span class="eclat" [style.--a]="$index * 45">{{ e }}</span>
+                }
+            </div>
+        }
+        @default {
+            <div class="espace" aria-hidden="true"></div>
+        }
+    }
     
     <div class="legende">
         <span>🍖 Faim : {{ statut.faim() }}/{{ statut.faimMax }}</span>
         <span>🎁 Cadeaux : {{ statut.cadeaux() }}</span>
+        @if (statut.isPetit()) {
+            <span>🐣 Croissance : {{ statut.taille() }}/{{ statut.tailleMax }}</span>
+        }
         <span class="jalousie">
             💚 Jalousie : {{ statut.niveauJalousie() }}/{{ statut.jalousieMax }}
             <span class="jauge"
