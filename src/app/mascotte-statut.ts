@@ -8,7 +8,7 @@ const DUREE_JALOUSIE = 10000;
 const DUREE_GAVE = 1500;
 const DUREE_EXPLOSION = 1000;
 /** Délai entre l'explosion et sa réapparition. */
-const DUREE_ABSENCE = 10000;
+const DUREE_ABSENCE = 5000;
 
 /** normal : présente · explosion : le BOUM · absent : elle va réapparaître, toute petite. */
 export type Phase = 'normal' | 'explosion' | 'absent';
