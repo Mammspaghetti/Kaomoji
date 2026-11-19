@@ -1,0 +1,5 @@
+@if (bowl(); as b) {
+    <app-bowl-view [bowl]="b" />
+} @else {
+    <span class="emoji" role="img" [attr.aria-label]="object().label">{{ object().emoji }}</span>
+}

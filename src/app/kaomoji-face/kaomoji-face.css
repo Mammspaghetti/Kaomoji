@@ -1,0 +1,138 @@
+/* Personnage agrandi de 50 % (zoom : la mise en page suit, contrairement à scale) */
+:host { display: inline-block; zoom: 1.5; }
+.zone { position: relative; }
+
+/* Bulle principale */
+.kaomoji-bulle {
+    position: relative;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #55352c;
+    box-shadow: 4px 4px 0 #bd7558;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: width 0.4s, height 0.4s, border-radius 0.4s;
+}
+
+/* Soleil levant */
+.kaomoji-bulle::before {
+    content: "";
+    position: absolute;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #e20000;
+    opacity: 0.3;
+    top: 28px;
+}
+
+.kaomoji-face {
+    position: relative;
+    z-index: 5;
+    font-size: 1.9rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: #55352c;
+}
+
+/* Roue de kaomoji autour du visage */
+.roue {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: tourne 12s linear infinite;
+}
+.roue span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: bold;
+    color: #9e382b;
+    opacity: 0.6;
+}
+
+/* ===== Peau de la bulle selon l'humeur ===== */
+.humeur-gros {
+    width: 210px;
+    height: 160px;
+    border-radius: 50% 50% 46% 46% / 55% 55% 45% 45%;
+    background: linear-gradient(145deg, #ffd9e0, #e98da0);
+    animation: respire 1.2s ease-in-out infinite;
+}
+.humeur-gave {
+    background: linear-gradient(145deg, #e5f0c8, #a9c27a);
+    animation: respire 0.6s ease-in-out infinite;
+}
+.humeur-jaloux {
+    background: linear-gradient(145deg, #d8f5c4, #7cbf5a);
+    border-color: #2f5a1e;
+    box-shadow: 4px 4px 0 #4d8a33;
+    animation: boude 1.5s ease-in-out infinite;
+}
+.humeur-tresJaloux {
+    background: radial-gradient(circle, #9be36b, #1f6b12);
+    border-color: #0e3306;
+    box-shadow: 0 0 18px 6px #4cd137;
+    animation: tremble 0.25s linear infinite;
+}
+.humeur-tresGrognon .kaomoji-face { font-size: 1.3rem; letter-spacing: -1px; }
+.humeur-triste { background: linear-gradient(145deg, #e3edf7, #a9c1dd); }
+.humeur-cadeau { background: linear-gradient(145deg, #fff3c4, #ffd36e); }
+
+/* ===== Effets ===== */
+.fx { position: absolute; z-index: 6; pointer-events: none; }
+.colere { top: 18px; right: 22px; font-size: 22px; animation: pulse 0.6s ease-in-out infinite alternate; }
+.trescolere {
+    top: 14px;
+    left: 50%;
+    font-size: 14px;
+    letter-spacing: -2px;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    animation: colereTremble 0.12s linear infinite alternate;
+}
+.yeux { top: 8px; font-size: 14px; letter-spacing: 2px; animation: pulse 0.8s ease-in-out infinite; }
+.hmpf { bottom: 14px; right: 14px; font-size: 11px; font-weight: bold; color: #2f5a1e; animation: pulse 0.8s ease-in-out infinite; }
+.malade { top: 10px; font-size: 20px; animation: pulse 0.8s ease-in-out infinite; }
+.etincelle { top: 14px; right: 16px; font-size: 20px; animation: pulse 0.6s ease-in-out infinite alternate; }
+.burp { bottom: 14px; font-size: 11px; font-style: italic; font-weight: bold; color: #55352c; animation: burp 1.5s ease-out infinite; }
+.larme { top: 55%; font-size: 16px; animation: larme 0.8s ease-in infinite; }
+.larme-gauche { left: 30%; }
+.larme-droite { right: 30%; animation-delay: 0.4s; }
+.joue {
+    position: absolute;
+    z-index: 4;
+    top: 85px;
+    width: 30px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff7f96;
+    opacity: 0.7;
+}
+.joue-gauche { left: 28px; }
+.joue-droite { right: 28px; }
+
+@keyframes tourne { to { transform: rotate(360deg); } }
+@keyframes respire { 50% { transform: scale(1.04, 0.97); } }
+@keyframes boude { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes tremble {
+    25% { transform: translate(-3px, 1px) rotate(-4deg); }
+    75% { transform: translate(3px, -1px) rotate(4deg); }
+}
+@keyframes pulse { from { transform: scale(0.8) rotate(-10deg); } to { transform: scale(1.2) rotate(10deg); } }
+@keyframes colereTremble {
+    from { transform: translateX(-52%) rotate(-3deg) scale(1); }
+    to { transform: translateX(-48%) rotate(3deg) scale(1.1); }
+}
+@keyframes larme { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
+@keyframes burp { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-15px); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .kaomoji-bulle, .kaomoji-bulle * { animation: none !important; }
+}

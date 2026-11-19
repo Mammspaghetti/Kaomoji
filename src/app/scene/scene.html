@@ -1,0 +1,58 @@
+<!-- Couche 1 : fond -->
+<div class="fond" aria-hidden="true">
+    @for (f of feuilles; track $index) {
+        <span
+            class="feuille"
+            [style.left.%]="f.left"
+            [style.animation-duration.s]="f.duree"
+            [style.animation-delay.s]="f.retard"
+            >{{ f.e }}</span
+        >
+    }
+</div>
+
+<!-- Couche 2 : objets -->
+<div class="objets">
+    @for (object of objects(); track object.id) {
+        <app-object [object]="object" />
+    }
+</div>
+
+<!-- Couche 3 : personnage, devant -->
+<div class="personnage">
+    <div class="mascotte-nom">✨ {{ etat.nom() }} ✨</div>
+    
+    <!-- Hauteur réservée pour ne pas tout décaler quand le bandeau apparaît -->
+    <div class="bandeau-zone">
+        @if (statut.bandeau(); as b) {
+            <span
+                class="bandeau"
+                [class]="b.type === 'stop' ? 'bandeau stop-' + b.niveau : 'bandeau message'"
+                [style.font-size.px]="b.type === 'stop' ? 12 + b.niveau * 8 : null"
+                role="status"
+                >{{ b.texte }}</span
+            >
+        }
+    </div>
+
+    <app-kaomoji-face
+        [humeur]="etat.humeur()"
+        [visage]="etat.visage()"
+        [reclame]="statut.isReclame()"
+    />
+    
+    <div class="legende">
+        <span>🍖 Faim : {{ statut.faim() }}/{{ statut.faimMax }}</span>
+        <span>🎁 Cadeaux : {{ statut.cadeaux() }}</span>
+        <span class="jalousie">
+            💚 Jalousie : {{ statut.niveauJalousie() }}/{{ statut.jalousieMax }}
+            <span class="jauge"
+                ><span
+                    class="jauge-niveau"
+                    [class.max]="statut.isTresJaloux()"
+                    [style.width.%]="(100 * statut.niveauJalousie()) / statut.jalousieMax"
+                ></span
+            ></span>
+        </span>
+    </div>
+</div>

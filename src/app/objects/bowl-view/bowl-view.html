@@ -1,0 +1,31 @@
+<div class="gamelle" [class.secoue]="secoue()">
+    <div class="gamelle-bol" [class.miam]="miam()">
+        <div class="tas">
+            @for (c of croquettes(); track $index) {
+                <span
+                    class="croquette"
+                    [style.left.%]="c.left"
+                    [style.bottom.px]="c.bottom"
+                    [style.transform]="'rotate(' + c.rot + 'deg)'"
+                ></span>
+            }
+        </div>
+        <div class="bol">
+            <span class="bol-nom">GP</span>
+            <span aria-hidden="true">🦴</span>
+        </div>
+        <div class="bol-ombre"></div>
+    </div>
+
+    <div class="etiquette" role="status">{{ message() }}</div>
+
+    <div class="actions">
+        <button type="button" class="nourrir" [disabled]="nourrirDesactive()" (click)="nourrir()">
+            Nourrir 🍖
+        </button>
+        <button type="button" [disabled]="bowl().isFull()" (click)="remplir()">Remplir 🥣</button>
+        <button type="button" class="voler" [disabled]="bowl().isEmpty()" (click)="voler()">
+            Voler 💢
+        </button>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, vi } from 'vitest';
+
+import { MascotteStatut } from './mascotte-statut';
+import { Bowl } from './objects/bowl';
+
+describe('MascotteStatut', () => {
+  let s: MascotteStatut;
+  const gamelle = (capacity = 20) => new Bowl({ id: 'b', x: 0, y: 0, capacity });
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    s = TestBed.inject(MascotteStatut);
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('est neutre au départ', () => {
+    expect(s.humeur()).toBe('neutre');
+  });
+
+  it('est grognon quand elle a faim, très grognon sans cadeau', () => {
+    s.faim.set(5);
+    expect(s.humeur()).toBe('grognon');
+    s.cadeaux.set(0);
+    expect(s.humeur()).toBe('tresGrognon');
+    expect(s.bandeau()?.texte).toContain('JE VEUX UN CADEAU');
+  });
+
+  it('mange : la faim baisse, puis elle grossit, puis elle est gavée', () => {
+    const g = gamelle();
+    s.manger(g);
+    s.manger(g);
+    expect(s.faim()).toBe(0);
+    expect(s.humeur()).toBe('neutre');
+
+    s.manger(g);
+    expect(s.humeur()).toBe('gros');
+    expect(s.bandeau()).toMatchObject({ type: 'message' });
+
+    for (let i = 1; i < s.surpoidsMax; i++) s.manger(g);
+    expect(s.humeur()).toBe('gave');
+    expect(s.manger(g)).toBe(false);
+    expect(g.level()).toBe(20 - 7);
+  });
+
+  it('ne mange pas quand la gamelle est vide', () => {
+    const g = gamelle(1);
+    g.empty();
+    expect(s.manger(g)).toBe(false);
+    expect(s.faim()).toBe(2);
+  });
+
+  it('le STOP grossit avec le surpoids', () => {
+    s.faim.set(0);
+    s.surpoids.set(3);
+    vi.advanceTimersByTime(3000);
+    expect(s.bandeau()).toEqual({ texte: 'STOP!!!', type: 'stop', niveau: 3 });
+  });
+
+  it('vole : gamelle vidée, affamée, kilos perdus, puis le message disparaît', () => {
+    const g = gamelle(5);
+    s.surpoids.set(2);
+    s.voler(g);
+    expect(g.isEmpty()).toBe(true);
+    expect(s.faim()).toBe(5);
+    expect(s.surpoids()).toBe(0);
+    expect(s.bandeau()?.texte).toContain('VOLER');
+    vi.advanceTimersByTime(2500);
+    expect(s.isVole()).toBe(false);
+  });
+
+  it('devient jalouse quand un rival reçoit un cadeau, très jalouse au niveau max', () => {
+    s.cadeauRival();
+    expect(s.humeur()).toBe('jaloux');
+    vi.advanceTimersByTime(10000);
+    expect(s.humeur()).toBe('neutre');
+
+    s.cadeauRival();
+    s.cadeauRival();
+    expect(s.isTresJaloux()).toBe(true);
+    vi.advanceTimersByTime(10000);
+    expect(s.humeur()).toBe('tresJaloux');
+    s.offrirCadeau();
+    expect(s.niveauJalousie()).toBe(2);
+  });
+
+  it('réagit aux cadeaux : content, réclame, triste (réactions temporaires)', () => {
+    s.offrirCadeau();
+    expect(s.humeur()).toBe('cadeau');
+    vi.advanceTimersByTime(2500);
+    expect(s.humeur()).toBe('neutre');
+
+    s.reprendreCadeau();
+    expect(s.isReclame()).toBe(true);
+    expect(s.humeur()).toBe('grognon');
+    vi.advanceTimersByTime(2500);
+    expect(s.isReclame()).toBe(false);
+
+    s.supprimerCadeau();
+    expect(s.humeur()).toBe('triste');
+    vi.advanceTimersByTime(2500);
+    expect(s.humeur()).toBe('neutre');
+  });
+
+  it("une humeur imposée prime sur le statut jusqu'à la prochaine interaction", () => {
+    s.imposer('gave');
+    expect(s.humeur()).toBe('gave');
+    s.offrirCadeau();
+    expect(s.humeurImposee()).toBeNull();
+    expect(s.humeur()).toBe('cadeau');
+  });
+});

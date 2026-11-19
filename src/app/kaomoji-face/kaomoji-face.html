@@ -1,0 +1,43 @@
+<div class="zone">
+  <app-kaomoji-gestes [tableLancee]="humeur() === 'tresGrognon'" [bras]="reclame()" />
+
+  <div class="kaomoji-bulle" [class]="'humeur-' + humeur()" role="img" [attr.aria-label]="libelle()">
+    <div class="roue" aria-hidden="true">
+      @for (k of roue; track k; let i = $index) {
+        <span [style.transform]="'translate(-50%, -50%) rotate(' + i * 60 + 'deg) translateY(-57px)'">{{ k }}</span>
+      }
+    </div>
+
+    @switch (humeur()) {
+      @case ('gros') {
+        <span class="joue joue-gauche"></span>
+        <span class="joue joue-droite"></span>
+        <span class="fx burp">*burp*</span>
+      }
+      @case ('gave') {
+        <span class="fx malade">🤢</span>
+      }
+      @case ('jaloux') {
+        <span class="fx hmpf">hmpf !</span>
+      }
+      @case ('tresJaloux') {
+        <span class="fx yeux">💚💚💚💚💚💚</span>
+      }
+      @case ('grognon') {
+        <span class="fx colere">💢</span>
+      }
+      @case ('tresGrognon') {
+        <span class="fx trescolere">💢💢💢💢💢💢</span>
+      }
+      @case ('triste') {
+        <span class="fx larme larme-gauche">💧</span>
+        <span class="fx larme larme-droite">💧</span>
+      }
+      @case ('cadeau') {
+        <span class="fx etincelle">✨</span>
+      }
+    }
+
+    <div class="kaomoji-face">{{ texte() }}</div>
+  </div>
+</div>

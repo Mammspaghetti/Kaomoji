@@ -1,0 +1,136 @@
+:host {
+    display: block;
+    width: 240px;
+    min-width: 240px;
+    height: 100%;
+}
+
+/* Barre de navigation à gauche */
+.nav-bar {
+    box-sizing: border-box;
+    height: 100%;
+    background: rgb(159, 118, 30);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    color: #fcfaf4;
+}
+
+.nav-bar h2 {
+    margin: 0 0 8px;
+    font-size: 1.4rem;
+}
+
+/* Boutons de la barre, assortis à la bulle (bordure brune, ombre décalée) */
+.nav-btn {
+    padding: 6px 10px;
+    text-align: left;
+    font: inherit;
+    font-size: 0.85rem;
+    color: #55352c;
+    background: #fcfaf4;
+    border: 2px solid #55352c;
+    border-radius: 10px;
+    box-shadow: 2px 2px 0 #bd7558;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background: #f5d5c0;
+}
+
+.nav-btn:focus-visible {
+    outline: 2px solid #fcfaf4;
+    outline-offset: 2px;
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.nav-btn.actif {
+    background: #bd7558;
+    color: #fff;
+}
+
+.nav-btn-accent {
+    background: #f5d5c0;
+    font-weight: 600;
+}
+
+.nav-titre {
+    margin: 12px 0 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+}
+
+/* Liste des émotions */
+.humeurs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.humeurs li {
+    display: flex;
+    gap: 4px;
+}
+
+.humeur {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.humeur.actif {
+    background: #bd7558;
+    color: #fff;
+}
+
+.humeur-visage {
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
+.reset {
+    padding: 6px 8px;
+}
+
+/* Renommer le personnage */
+.renommer {
+    display: flex;
+    gap: 6px;
+}
+
+.renommer .champ {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Formulaire d'import */
+.import {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.champ {
+    padding: 6px 8px;
+    font: inherit;
+    font-size: 0.85rem;
+    color: #55352c;
+    background: #fff;
+    border: 2px solid #55352c;
+    border-radius: 10px;
+}

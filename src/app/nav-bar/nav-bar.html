@@ -1,0 +1,86 @@
+<nav class="nav-bar">
+    <h2>Kaomoji</h2>
+
+    <!-- Renommer le personnage -->
+    <form class="renommer" (submit)="$event.preventDefault(); renommer(nom)">
+        <input
+            #nom
+            class="champ"
+            maxlength="30"
+            aria-label="Nom du personnage"
+            [value]="etat.nom()"
+        />
+        <button type="submit" class="nav-btn nav-btn-accent" title="Renommer le personnage">
+            ✏️
+        </button>
+    </form>
+
+    <!-- Interactions : elles font réagir le statut de la mascotte -->
+    <h3 class="nav-titre">Interactions</h3>
+    <button class="nav-btn interaction" (click)="statut.offrirCadeau()">🎁 Offrir un cadeau</button>
+    <button
+        class="nav-btn interaction"
+        [disabled]="statut.cadeaux() === 0"
+        (click)="statut.reprendreCadeau()"
+    >
+        😠 Reprendre un cadeau
+    </button>
+    <button
+        class="nav-btn interaction"
+        [disabled]="statut.cadeaux() === 0"
+        (click)="statut.supprimerCadeau()"
+    >
+        🗑️ Supprimer un cadeau
+    </button>
+    <button class="nav-btn interaction" (click)="statut.cadeauRival()">💚 Cadeau à un rival</button>
+
+    <!-- Émotions : on peut en imposer une, ou laisser le statut décider -->
+    <h3 class="nav-titre">Émotions</h3>
+    <button
+        class="nav-btn nav-btn-accent auto"
+        [class.actif]="etat.humeurImposee() === null"
+        [attr.aria-pressed]="etat.humeurImposee() === null"
+        (click)="etat.liberer()"
+    >
+        🔄 Automatique
+    </button>
+    <button class="nav-btn nav-btn-accent" (click)="etat.aleatoire()">🎲 Au hasard</button>
+
+    <ul class="humeurs">
+        @for (h of humeurs; track h) {
+            <li>
+                <button
+                    class="nav-btn humeur"
+                    [class.actif]="etat.humeur() === h"
+                    [attr.aria-pressed]="etat.humeur() === h"
+                    (click)="etat.choisir(h)"
+                >
+                    <span>{{ libelles[h] }}</span>
+                    <span class="humeur-visage">{{ etat.visages()[h] }}</span>
+                </button>
+                @if (etat.visagesPerso()[h]) {
+                    <button
+                        class="nav-btn reset"
+                        title="Rétablir le visage par défaut"
+                        [attr.aria-label]="'Rétablir le visage par défaut : ' + libelles[h]"
+                        (click)="etat.reinitialiser(h)"
+                    >
+                        ↺
+                    </button>
+                }
+            </li>
+        }
+    </ul>
+
+    <!-- Import d'un visage -->
+    <form class="import" (submit)="$event.preventDefault(); importer(cible.value, saisie)">
+        <h3 class="nav-titre">Importer un visage</h3>
+        <input #saisie class="champ" maxlength="30" placeholder="(＾▽＾)" aria-label="Visage" />
+        <select #cible class="champ" aria-label="Émotion associée">
+            @for (h of humeurs; track h) {
+                <option [value]="h" [selected]="h === etat.humeur()">{{ libelles[h] }}</option>
+            }
+        </select>
+        <button type="submit" class="nav-btn nav-btn-accent">Associer</button>
+    </form>
+</nav>
