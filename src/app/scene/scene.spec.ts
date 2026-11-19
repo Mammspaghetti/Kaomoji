@@ -24,7 +24,7 @@ describe('Scene', () => {
     expect(el.querySelector('.fond')).toBeTruthy();
     expect(el.querySelectorAll('.objets app-object').length).toBe(createDefaultObjects().length);
     expect(el.querySelector('.personnage app-kaomoji-face')).toBeTruthy();
-    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('xxxXX-GP-XXxxx');
+    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('Kaomoji-san');
   });
 
   it('affiche le nom du personnage et suit son renommage', async () => {

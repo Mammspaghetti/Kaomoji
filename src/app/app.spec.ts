@@ -25,7 +25,7 @@ describe('App', () => {
   it('affiche la mascotte sur /mascotte', async () => {
     const harness = await RouterTestingHarness.create('/mascotte');
     const el = harness.routeNativeElement!;
-    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('xxxXX-GP-XXxxx');
+    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('Kaomoji-san');
     expect(el.querySelector('app-kaomoji')).toBeTruthy();
     expect(el.querySelector('app-gamelle')).toBeTruthy();
   });

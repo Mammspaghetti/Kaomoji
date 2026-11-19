@@ -45,6 +45,13 @@
               ],
               "outputHashing": "all"
             },
+            "pages": {
+              "baseHref": "/Kaomoji/",
+              "outputPath": {
+                "base": "docs",
+                "browser": ""
+              }
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
