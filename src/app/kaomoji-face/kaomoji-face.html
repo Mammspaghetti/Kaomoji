@@ -1,4 +1,4 @@
-<div class="zone">
+<div class="zone" [style.--peau]="peau()">
   <app-kaomoji-gestes [tableLancee]="humeur() === 'tresGrognon'" [bras]="reclame()" />
 
   <div class="kaomoji-bulle" [class]="'humeur-' + humeur()" role="img" [attr.aria-label]="libelle()">
@@ -8,10 +8,11 @@
       }
     </div>
 
+    <span class="joue joue-gauche"></span>
+    <span class="joue joue-droite"></span>
+
     @switch (humeur()) {
       @case ('gros') {
-        <span class="joue joue-gauche"></span>
-        <span class="joue joue-droite"></span>
         <span class="fx burp">*burp*</span>
       }
       @case ('gave') {

@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { KaomojiGestes } from './gestes/kaomoji-gestes';
-import { Humeur, LIBELLES, VISAGES } from './humeur';
+import { Humeur, LIBELLES, PEAUX, VISAGES } from './humeur';
 
 @Component({
   selector: 'app-kaomoji-face',
@@ -16,6 +16,7 @@ export class KaomojiFace {
   readonly reclame = input(false);
 
   protected readonly texte = computed(() => this.visage() ?? VISAGES[this.humeur()]);
+  protected readonly peau = computed(() => PEAUX[this.humeur()]);
   protected readonly libelle = computed(() => LIBELLES[this.humeur()]);
 
   /** Kaomoji qui tournent autour du visage. */

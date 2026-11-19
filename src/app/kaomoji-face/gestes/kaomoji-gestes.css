@@ -1,5 +1,20 @@
 :host { display: contents; }
 
+/* Oreilles pointues derrière la bulle, de la même couleur (var --peau posée par le parent) */
+.oreille {
+    position: absolute;
+    top: -6px;
+    z-index: -1;
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    border: 4px solid #55352c;
+    border-radius: 4px 100% 4px 100%;
+    background: var(--peau, #fff);
+}
+.oreille-gauche { left: 12%; transform: rotate(25deg); }
+.oreille-droite { right: 12%; transform: rotate(65deg); }
+
 /* Hors de la bulle : bras et table */
 .bras {
     position: absolute;

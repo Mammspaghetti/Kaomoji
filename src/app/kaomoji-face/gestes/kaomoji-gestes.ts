@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 
-/** Gestes qui sortent de la bulle : table lancée, bras qui s'agitent. À placer dans un parent `position: relative`. */
+/** Ce qui dépasse de la bulle : oreilles, table lancée, bras qui s'agitent. À placer dans un parent `position: relative`. */
 @Component({
   selector: 'app-kaomoji-gestes',
   templateUrl: './kaomoji-gestes.html',

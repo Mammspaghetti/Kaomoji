@@ -1,6 +1,21 @@
 /* Personnage agrandi de 50 % (zoom : la mise en page suit, contrairement à scale) */
 :host { display: inline-block; zoom: 1.5; }
-.zone { position: relative; }
+/* isolation : les oreilles (z-index négatif) restent derrière la bulle mais devant la scène */
+.zone { position: relative; isolation: isolate; animation: rebond 2.6s ease-in-out infinite; }
+
+/* Ombre au sol */
+.zone::after {
+    content: "";
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    bottom: -14px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(85, 53, 44, 0.2);
+    filter: blur(2px);
+    z-index: -2;
+}
 
 /* Bulle principale */
 .kaomoji-bulle {
@@ -8,7 +23,7 @@
     width: 145px;
     height: 145px;
     border-radius: 50%;
-    background: white;
+    background: var(--peau, white);
     border: 4px solid #55352c;
     box-shadow: 4px 4px 0 #bd7558;
     display: flex;
@@ -28,6 +43,20 @@
     background: #e20000;
     opacity: 0.3;
     top: 28px;
+}
+
+/* Reflet brillant */
+.kaomoji-bulle::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 24px;
+    z-index: 3;
+    width: 34px;
+    height: 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.65);
+    transform: rotate(-28deg);
 }
 
 .kaomoji-face {
@@ -57,33 +86,27 @@
     opacity: 0.6;
 }
 
-/* ===== Peau de la bulle selon l'humeur ===== */
+/* ===== Forme et mouvement de la bulle selon l'humeur (la couleur vient de --peau) ===== */
 .humeur-gros {
     width: 210px;
     height: 160px;
     border-radius: 50% 50% 46% 46% / 55% 55% 45% 45%;
-    background: linear-gradient(145deg, #ffd9e0, #e98da0);
     animation: respire 1.2s ease-in-out infinite;
 }
 .humeur-gave {
-    background: linear-gradient(145deg, #e5f0c8, #a9c27a);
     animation: respire 0.6s ease-in-out infinite;
 }
 .humeur-jaloux {
-    background: linear-gradient(145deg, #d8f5c4, #7cbf5a);
     border-color: #2f5a1e;
     box-shadow: 4px 4px 0 #4d8a33;
     animation: boude 1.5s ease-in-out infinite;
 }
 .humeur-tresJaloux {
-    background: radial-gradient(circle, #9be36b, #1f6b12);
     border-color: #0e3306;
     box-shadow: 0 0 18px 6px #4cd137;
     animation: tremble 0.25s linear infinite;
 }
 .humeur-tresGrognon .kaomoji-face { font-size: 1.3rem; letter-spacing: -1px; }
-.humeur-triste { background: linear-gradient(145deg, #e3edf7, #a9c1dd); }
-.humeur-cadeau { background: linear-gradient(145deg, #fff3c4, #ffd36e); }
 
 /* ===== Effets ===== */
 .fx { position: absolute; z-index: 6; pointer-events: none; }
@@ -108,16 +131,18 @@
 .joue {
     position: absolute;
     z-index: 4;
-    top: 85px;
-    width: 30px;
-    height: 18px;
+    top: 80px;
+    width: 28px;
+    height: 16px;
     border-radius: 50%;
-    background: #ff7f96;
-    opacity: 0.7;
+    background: radial-gradient(ellipse, rgba(255, 127, 150, 0.8), rgba(255, 127, 150, 0) 72%);
 }
+/* Pas de joues roses quand il est vert de jalousie, malade ou furieux */
+.humeur-gave .joue, .humeur-jaloux .joue, .humeur-tresJaloux .joue, .humeur-tresGrognon .joue { display: none; }
 .joue-gauche { left: 28px; }
 .joue-droite { right: 28px; }
 
+@keyframes rebond { 50% { transform: translateY(-6px); } }
 @keyframes tourne { to { transform: rotate(360deg); } }
 @keyframes respire { 50% { transform: scale(1.04, 0.97); } }
 @keyframes boude { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
@@ -134,5 +159,5 @@
 @keyframes burp { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-15px); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-    .kaomoji-bulle, .kaomoji-bulle * { animation: none !important; }
+    .zone, .kaomoji-bulle, .kaomoji-bulle * { animation: none !important; }
 }

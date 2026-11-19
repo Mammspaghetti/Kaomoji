@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KaomojiFace } from './kaomoji-face';
-import { Humeur, VISAGES } from './humeur';
+import { Humeur, PEAUX, VISAGES } from './humeur';
 
 describe('KaomojiFace', () => {
   async function creer(entrees: Record<string, unknown> = {}): Promise<HTMLElement> {
@@ -46,6 +46,13 @@ describe('KaomojiFace', () => {
     expect((await creer({ humeur: 'tresGrognon' })).querySelector('.table-lancee')).toBeTruthy();
     TestBed.resetTestingModule();
     expect((await creer({ humeur: 'neutre' })).querySelector('.table-lancee')).toBeNull();
+  });
+
+  it('a des oreilles et des joues, de la couleur de son humeur', async () => {
+    const el = await creer({ humeur: 'jaloux' });
+    expect(el.querySelectorAll('.oreille').length).toBe(2);
+    expect(el.querySelector<HTMLElement>('.zone')?.style.getPropertyValue('--peau')).toBe(PEAUX.jaloux);
+    expect(el.querySelectorAll('.joue').length).toBe(2);
   });
 
   it('agite les bras quand il réclame son cadeau', async () => {
