@@ -125,7 +125,7 @@ describe('MascotteStatut', () => {
 
       vi.advanceTimersByTime(1500);
       expect(s.phase()).toBe('explosion');
-      expect(s.bandeau()?.texte).toContain('BOUM');
+      expect(s.bandeau()?.texte).toContain('MACRON EXPLOSION');
 
       vi.advanceTimersByTime(1000);
       expect(s.phase()).toBe('absent');

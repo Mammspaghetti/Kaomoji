@@ -50,7 +50,6 @@
         @case ('explosion') {
             <div class="espace" aria-hidden="true">
                 <span class="boum">💥</span>
-                <span class="macron">MACRON EXPLOSION</span>
                 @for (e of eclats; track $index) {
                     <span class="eclat" [style.--a]="$index * 45">{{ e }}</span>
                 }

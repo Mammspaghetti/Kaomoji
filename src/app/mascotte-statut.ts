@@ -79,7 +79,7 @@ export class MascotteStatut {
   readonly humeur = computed(() => this.humeurImposee() ?? this.humeurCalculee());
 
   readonly bandeau = computed<Bandeau | null>(() => {
-    if (this.phase() === 'explosion') return { texte: 'BOUM ! 💥', type: 'message', niveau: 0 };
+    if (this.phase() === 'explosion') return { texte: 'MACRON EXPLOSION 💥', type: 'message', niveau: 0 };
     if (this.phase() === 'absent') {
       return { texte: 'Il va revenir, tout petit… 💫', type: 'message', niveau: 0 };
     }

@@ -71,12 +71,11 @@ describe('Scene', () => {
     expect(el.querySelector('app-kaomoji-face')).toBeNull();
     expect(el.querySelector('.boum')).toBeTruthy();
     expect(el.querySelectorAll('.eclat').length).toBe(8);
-    expect(el.querySelector('.macron')?.textContent).toBe('MACRON EXPLOSION');
+    expect(el.querySelector('.bandeau')?.textContent).toContain('MACRON EXPLOSION');
 
     statut.phase.set('absent');
     await fixture.whenStable();
     expect(el.querySelector('.boum')).toBeNull();
-    expect(el.querySelector('.macron')).toBeNull();
     expect(el.querySelector('.espace')).toBeTruthy();
 
     statut.phase.set('normal');
