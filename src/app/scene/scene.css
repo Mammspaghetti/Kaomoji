@@ -71,14 +71,14 @@
 .stop-4 { animation-duration: 0.2s; }
 .stop-5 { animation-duration: 0.1s; }
 
-/* Place du personnage (218px = bulle de 145px × 1,5) quand il explose ou qu'il est absent */
+/* Place du personnage (bulle de 145px × zoom) quand il explose ou qu'il est absent */
 .espace {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 218px;
-    height: 218px;
+    width: calc(145px * var(--zoom-base, 1.5));
+    height: calc(145px * var(--zoom-base, 1.5));
 }
 .boum { font-size: 150px; animation: boum 1s ease-out forwards; }
 .eclat {
@@ -134,4 +134,11 @@
 
 @media (prefers-reduced-motion: reduce) {
     .feuille, .bandeau, .boum, .eclat, .apparition { animation: none !important; }
+}
+
+/* Téléphone : personnage un peu plus petit, moins de place réservée à la gamelle */
+@media (max-width: 767px) {
+    :host { --zoom-base: 1.1; }
+    .personnage { padding-bottom: 200px; }
+    .mascotte-nom { margin-top: 40px; } /* sous le bouton ☰ */
 }

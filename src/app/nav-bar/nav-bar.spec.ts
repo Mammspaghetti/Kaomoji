@@ -104,4 +104,78 @@ describe('NavBar', () => {
     expect(bouton('Reprendre').disabled).toBe(true);
     expect(bouton('Supprimer').disabled).toBe(true);
   });
+
+  describe('responsive', () => {
+    const ecran = (large: boolean) =>
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        value: () => ({ matches: large }),
+      });
+    afterEach(() => Reflect.deleteProperty(window, 'matchMedia'));
+
+    async function creer(large: boolean): Promise<HTMLElement> {
+      ecran(large);
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({ imports: [NavBar] }).compileComponents();
+      fixture = TestBed.createComponent(NavBar);
+      await fixture.whenStable();
+      return fixture.nativeElement;
+    }
+
+    const burger = (el: HTMLElement) => el.querySelector<HTMLButtonElement>('.burger')!;
+    const menu = (el: HTMLElement) => el.querySelector('nav')!;
+
+    it('est ouverte d’office sur grand écran, et le bouton la ferme puis la rouvre', async () => {
+      const el = await creer(true);
+      expect(burger(el).getAttribute('aria-expanded')).toBe('true');
+      expect(menu(el).hasAttribute('inert')).toBe(false);
+
+      burger(el).click();
+      await fixture.whenStable();
+      expect(burger(el).getAttribute('aria-expanded')).toBe('false');
+      expect(burger(el).textContent).toContain('☰');
+      expect(el.classList).not.toContain('ouverte');
+      expect(menu(el).hasAttribute('inert')).toBe(true);
+
+      burger(el).click();
+      await fixture.whenStable();
+      expect(el.classList).toContain('ouverte');
+      expect(burger(el).textContent).toContain('✕');
+    });
+
+    it('est fermée d’office sur téléphone, pour laisser voir le personnage', async () => {
+      const el = await creer(false);
+      expect(burger(el).getAttribute('aria-expanded')).toBe('false');
+      expect(menu(el).hasAttribute('inert')).toBe(true);
+      expect(el.querySelector('.voile')).toBeNull();
+    });
+
+    it('sur téléphone, se referme après une action pour laisser voir la réaction', async () => {
+      const el = await creer(false);
+      burger(el).click();
+      await fixture.whenStable();
+      expect(el.querySelector('.voile')).toBeTruthy();
+
+      bouton('Offrir un cadeau').click();
+      await fixture.whenStable();
+      expect(TestBed.inject(MascotteStatut).cadeaux()).toBe(2);
+      expect(burger(el).getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('sur téléphone, toucher à côté du menu le referme', async () => {
+      const el = await creer(false);
+      burger(el).click();
+      await fixture.whenStable();
+      el.querySelector<HTMLElement>('.voile')!.click();
+      await fixture.whenStable();
+      expect(burger(el).getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('sur grand écran, une action ne referme pas le menu', async () => {
+      const el = await creer(true);
+      bouton('Offrir un cadeau').click();
+      await fixture.whenStable();
+      expect(burger(el).getAttribute('aria-expanded')).toBe('true');
+    });
+  });
 });

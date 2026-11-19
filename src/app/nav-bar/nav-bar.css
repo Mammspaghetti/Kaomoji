@@ -1,13 +1,47 @@
+/*
+ * Grand écran : la barre est dans la mise en page, et sa largeur s'anime quand on l'ouvre/ferme.
+ * Téléphone (< 768px) : c'est un tiroir qui recouvre la scène.
+ */
 :host {
+    --largeur: min(280px, 85vw);
     display: block;
-    width: 240px;
-    min-width: 240px;
+    flex: none;
+    width: 0;
     height: 100%;
+    overflow: hidden;
+    transition: width 0.25s;
 }
+:host(.ouverte) { width: var(--largeur); }
+
+/* Bouton ☰ / ✕, toujours accessible (cible tactile de 44px) */
+.burger {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 30;
+    width: 44px;
+    height: 44px;
+    font: inherit;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #55352c;
+    background: #fcfaf4;
+    border: 2px solid #55352c;
+    border-radius: 12px;
+    box-shadow: 2px 2px 0 #bd7558;
+    cursor: pointer;
+    transition: left 0.25s;
+}
+.burger:hover { background: #f5d5c0; }
+.burger:focus-visible { outline: 2px solid #55352c; outline-offset: 2px; }
+:host(.ouverte) .burger { left: calc(var(--largeur) + 12px); }
+
+.voile { display: none; }
 
 /* Barre de navigation à gauche */
 .nav-bar {
     box-sizing: border-box;
+    width: var(--largeur);
     height: 100%;
     background: rgb(159, 118, 30);
     display: flex;
@@ -133,4 +167,24 @@
     background: #fff;
     border: 2px solid #55352c;
     border-radius: 10px;
+}
+
+@media (max-width: 767px) {
+    :host(.ouverte) { width: 0; }
+    .nav-bar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        padding-top: 64px; /* laisse la place au bouton ☰ */
+        transform: translateX(-100%);
+        transition: transform 0.25s;
+    }
+    :host(.ouverte) .nav-bar { transform: none; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3); }
+    .voile { display: block; position: fixed; inset: 0; z-index: 10; background: rgba(0, 0, 0, 0.35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host, .burger, .nav-bar { transition: none; }
 }

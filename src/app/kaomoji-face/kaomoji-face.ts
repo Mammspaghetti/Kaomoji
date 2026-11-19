@@ -5,7 +5,7 @@ import { Humeur, LIBELLES, PEAUX, VISAGES } from './humeur';
 @Component({
   selector: 'app-kaomoji-face',
   imports: [KaomojiGestes],
-  host: { '[style.zoom]': '1.5 * echelle()' },
+  host: { '[style.zoom]': "'calc(var(--zoom-base, 1.5) * ' + echelle() + ')'" },
   templateUrl: './kaomoji-face.html',
   styleUrl: './kaomoji-face.css',
 })

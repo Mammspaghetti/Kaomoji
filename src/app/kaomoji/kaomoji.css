@@ -1,5 +1,6 @@
 .scene-container {
     height: 100vh;
+    height: 100dvh; /* tient compte de la barre d'adresse des navigateurs mobiles */
     display: flex;
     flex-direction: row;
     overflow: hidden;

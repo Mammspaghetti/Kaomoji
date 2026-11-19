@@ -1,4 +1,20 @@
-<nav class="nav-bar">
+<button
+    type="button"
+    class="burger"
+    aria-controls="menu"
+    [attr.aria-expanded]="ouverte()"
+    [attr.aria-label]="ouverte() ? 'Fermer le menu' : 'Ouvrir le menu'"
+    (click)="basculer()"
+>
+    {{ ouverte() ? '✕' : '☰' }}
+</button>
+
+<!-- Sur téléphone : toucher à côté du menu le referme -->
+@if (ouverte()) {
+    <div class="voile" aria-hidden="true" (click)="fermer()"></div>
+}
+
+<nav id="menu" class="nav-bar" [attr.inert]="ouverte() ? null : ''" (click)="apresClic($event)">
     <h2>Kaomoji</h2>
 
     <!-- Renommer le personnage -->
