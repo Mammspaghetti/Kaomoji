@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavBar } from './nav-bar';
 import { MascotteEtat } from '../mascotte-etat';
 import { MascotteStatut } from '../mascotte-statut';
-import { HUMEURS, VISAGES } from '../kaomoji-face/humeur';
+import { HUMEURS, VISAGES } from '../kaomoji/kaomoji-face/humeur';
 
 describe('NavBar', () => {
   let fixture: ComponentFixture<NavBar>;

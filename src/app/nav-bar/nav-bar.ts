@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { HUMEURS, Humeur, LIBELLES } from '../kaomoji-face/humeur';
+import { HUMEURS, Humeur, LIBELLES } from '../kaomoji/kaomoji-face/humeur';
 import { MascotteEtat } from '../mascotte-etat';
 import { MascotteStatut } from '../mascotte-statut';
 

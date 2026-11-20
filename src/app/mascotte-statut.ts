@@ -1,5 +1,5 @@
 import { DestroyRef, Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
-import { Humeur } from './kaomoji-face/humeur';
+import { Humeur } from './kaomoji/kaomoji-face/humeur';
 import { Bowl } from './objects/bowl';
 
 const DUREE_COURTE = 2500;

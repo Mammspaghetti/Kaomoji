@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { HUMEURS, Humeur, VISAGES } from './kaomoji-face/humeur';
+import { HUMEURS, Humeur, VISAGES } from './kaomoji/kaomoji-face/humeur';
 import { MascotteStatut } from './mascotte-statut';
 
 const CLE_STOCKAGE = 'kaomoji.visages';

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { KaomojiFace } from '../kaomoji-face/kaomoji-face';
+import { KaomojiFace } from '../kaomoji/kaomoji-face/kaomoji-face';
 import { MascotteEtat } from '../mascotte-etat';
 import { MascotteStatut } from '../mascotte-statut';
 import { createDefaultObjects } from '../objects/default-objects';
