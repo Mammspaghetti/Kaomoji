@@ -27,6 +27,39 @@ describe('Scene', () => {
     expect(el.querySelector('.mascotte-nom')?.textContent).toContain('Kaomoji-san');
   });
 
+  describe('pat-pat', () => {
+    const tapoter = async (fois: number) => {
+      const effet = el.querySelector<HTMLElement>('app-kaomoji-effect')!;
+      for (let i = 0; i < fois; i++) effet.click();
+      await fixture.whenStable();
+    };
+
+    it('le rend neutre, même s’il était grognon', async () => {
+      TestBed.inject(MascotteEtat).choisir('grognon');
+      await tapoter(1);
+      expect(TestBed.inject(MascotteEtat).humeur()).toBe('neutre');
+    });
+
+    it('beaucoup de pat-pat (5) le rendent confus', async () => {
+      await tapoter(4);
+      expect(TestBed.inject(MascotteEtat).humeur()).toBe('neutre');
+      await tapoter(1);
+      expect(TestBed.inject(MascotteEtat).humeur()).toBe('confus');
+    });
+
+    it('il reprend son humeur normale quand on arrête', () => {
+      vi.useFakeTimers();
+      try {
+        const effet = el.querySelector<HTMLElement>('app-kaomoji-effect')!;
+        for (let i = 0; i < 5; i++) effet.click();
+        vi.advanceTimersByTime(1600);
+        expect(TestBed.inject(MascotteEtat).humeurImposee()).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
   it('affiche le nom du personnage et suit son renommage', async () => {
     TestBed.inject(MascotteEtat).renommer('Mochi');
     await fixture.whenStable();

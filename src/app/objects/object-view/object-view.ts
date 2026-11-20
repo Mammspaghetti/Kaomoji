@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
-import { Bowl } from './bowl';
-import { BowlView } from './bowl-view/bowl-view';
-import { SceneObject } from './scene-object';
+import { Bowl } from '../bowl';
+import { BowlView } from '../bowl-view/bowl-view';
+import { SceneObject } from '../scene-object';
 
 /** Affiche un objet de la scène à sa position ; délègue le rendu des objets interactifs. */
 @Component({

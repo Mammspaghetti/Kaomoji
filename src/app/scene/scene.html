@@ -39,12 +39,14 @@
     @switch (statut.phase()) {
         @case ('normal') {
             <div class="apparition">
-                <app-kaomoji-face
-                    [humeur]="etat.humeur()"
-                    [visage]="etat.visage()"
-                    [reclame]="statut.isReclame()"
-                    [echelle]="statut.echelle()"
-                />
+                <app-kaomoji-effect [gros]="niveauGros()" (pat)="tapoter($event)" (calme)="calmer()">
+                    <app-kaomoji-face
+                        [humeur]="etat.humeur()"
+                        [visage]="etat.visage()"
+                        [reclame]="statut.isReclame()"
+                        [echelle]="statut.echelle()"
+                    />
+                </app-kaomoji-effect>
             </div>
         }
         @case ('explosion') {

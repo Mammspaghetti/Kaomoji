@@ -1,5 +1,6 @@
 export type Humeur =
   | 'neutre'
+  | 'confus'
   | 'content'
   | 'triste'
   | 'tresJaloux'
@@ -12,6 +13,7 @@ export type Humeur =
 
 export const VISAGES: Record<Humeur, string> = {
   neutre: '( o _ o)',
+  confus: '(@_@)',
   content: '(˃ᆺ˂)',
   triste: '(T w T)',
   tresJaloux: '8(>_<)8',
@@ -25,6 +27,7 @@ export const VISAGES: Record<Humeur, string> = {
 
 export const LIBELLES: Record<Humeur, string> = {
   neutre: 'Neutre',
+  confus: 'Confus',
   content: 'Content',
   triste: 'Triste',
   tresJaloux: 'Très jaloux',
@@ -41,6 +44,7 @@ export const HUMEURS = Object.keys(VISAGES) as Humeur[];
 /** Fond de la bulle (et des oreilles) selon l'humeur : pastel doux, qui vire au vert, au rouge… */
 export const PEAUX: Record<Humeur, string> = {
   neutre: 'linear-gradient(145deg, #fdfcf8, #ece4da)',
+  confus: 'linear-gradient(145deg, #efe6fa, #c3b0e0)',
   content: 'linear-gradient(145deg, #fffaf3, #ffdcc9)',
   triste: 'linear-gradient(145deg, #e3edf7, #a9c1dd)',
   tresJaloux: 'radial-gradient(circle, #9be36b, #1f6b12)',

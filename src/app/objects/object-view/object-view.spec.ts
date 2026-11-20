@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Bowl } from './bowl';
+import { Bowl } from '../bowl';
 import { ObjectView } from './object-view';
-import { SceneObject } from './scene-object';
+import { SceneObject } from '../scene-object';
 
 describe('ObjectView', () => {
   async function creer(objet: SceneObject): Promise<ComponentFixture<ObjectView>> {
