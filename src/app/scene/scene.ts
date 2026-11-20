@@ -18,9 +18,6 @@ const FEUILLES = [
   { e: '🍁', left: 92, duree: 12, retard: 3 },
 ];
 
-/** Nombre de pat-pat d'affilée à partir duquel il est complètement perdu. */
-const PATS_CONFUS = 5;
-
 /** Éclats projetés par l'explosion (un par direction, tous les 45°). */
 const ECLATS = ['🍖', '✨', '💥', '🦴', '🍖', '✨', '💥', '🦴'];
 
@@ -37,19 +34,6 @@ export class Scene {
   protected readonly objects = signal<SceneObject[]>(createDefaultObjects());
   /** Surpoids (1 à 5) = niveau d'obésité. */
   protected readonly niveauGros = computed(() => Math.min(5, this.statut.surpoids()) as NiveauGros);
-  /** Tapoter le rend neutre ; beaucoup, confus. */
-  protected tapoter(nombre: number): void {
-    this.etat.choisir(nombre >= PATS_CONFUS ? 'confus' : 'neutre');
-    this.tapote = true;
-  }
-
-  /** Fin des pat-pat : retour à l'humeur déduite du statut. */
-  protected calmer(): void {
-    if (this.tapote) this.etat.liberer();
-    this.tapote = false;
-  }
-
-  private tapote = false;
   protected readonly feuilles = FEUILLES;
   protected readonly eclats = ECLATS;
 }

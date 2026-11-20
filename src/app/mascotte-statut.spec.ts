@@ -117,6 +117,52 @@ describe('MascotteStatut', () => {
     expect(s.humeur()).toBe('cadeau');
   });
 
+  describe('pat-pat', () => {
+    const tapoter = (n: number) => {
+      for (let i = 1; i <= n; i++) s.tapoter(i);
+    };
+
+    it('dit « oh djadja » au premier, et devient neutre', () => {
+      s.imposer('grognon');
+      s.tapoter(1);
+      expect(s.humeur()).toBe('neutre');
+      expect(s.bandeau()?.texte).toContain('Oh djadja');
+    });
+
+    it('confus à 5, « y a pas moyen » à 10', () => {
+      tapoter(5);
+      expect(s.humeur()).toBe('confus');
+      tapoter(10);
+      expect(s.bandeau()?.texte).toContain('Y a pas moyen djadja');
+    });
+
+    it('écrasé à 20 : « t’es taré », furieux, et le reste après la série', () => {
+      tapoter(20);
+      expect(s.humeur()).toBe('tresGrognon');
+      expect(s.bandeau()?.texte).toContain('t’es taré');
+      s.finTapotage();
+      expect(s.humeur()).toBe('tresGrognon');
+      s.offrirCadeau(); // toute interaction le calme
+      expect(s.humeurImposee()).toBeNull();
+    });
+
+    it('une série le fait maigrir d’un niveau, et reprend l’humeur du statut', () => {
+      s.surpoids.set(3);
+      tapoter(5);
+      s.finTapotage();
+      expect(s.surpoids()).toBe(2);
+      expect(s.humeurImposee()).toBeNull();
+      s.finTapotage(); // pas de série en cours : rien ne change
+      expect(s.surpoids()).toBe(2);
+    });
+
+    it('ne maigrit pas en dessous de 0', () => {
+      tapoter(1);
+      s.finTapotage();
+      expect(s.surpoids()).toBe(0);
+    });
+  });
+
   describe('explosion', () => {
     /** Amène la mascotte à un cheveu du gavage, puis lui donne la croquette de trop. */
     const gaver = (g: Bowl) => {

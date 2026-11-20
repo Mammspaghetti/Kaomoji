@@ -1,13 +1,11 @@
 import { Component, ElementRef, computed, inject, input, output, signal } from '@angular/core';
+import { PATS_ECRASE } from '../pat-pat';
 
 export type Niveau = 0 | 1 | 2 | 3;
 export type NiveauGros = Niveau | 4 | 5;
 
 /** Délai sans tapotement avant que le personnage se calme. */
 const DELAI_CALME_MS = 1500;
-
-/** Nombre de pat-pat d'affilée qui l'écrasent complètement au sol. */
-export const PATS_ECRASE = 20;
 
 /** Un pat-pat : la tête s'enfonce sous la main puis rebondit. Plus on tapote, plus c'est appuyé. */
 const PATS: Record<1 | 2 | 3, Keyframe[]> = {

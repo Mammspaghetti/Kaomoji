@@ -37,7 +37,7 @@
     @switch (statut.phase()) {
         @case ('normal') {
             <div class="apparition">
-                <app-kaomoji-effect [gros]="niveauGros()" (pat)="tapoter($event)" (calme)="calmer()">
+                <app-kaomoji-effect [gros]="niveauGros()" (pat)="statut.tapoter($event)" (calme)="statut.finTapotage()">
                     <app-kaomoji-face
                         [humeur]="etat.humeur()"
                         [visage]="etat.visage()"

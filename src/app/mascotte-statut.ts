@@ -1,5 +1,6 @@
 import { DestroyRef, Injectable, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Humeur } from './kaomoji/kaomoji-face/humeur';
+import { PATS_CONFUS, PATS_ECRASE, PATS_REFUS } from './kaomoji/pat-pat';
 import { Bowl } from './objects/bowl';
 
 const DUREE_COURTE = 2500;
@@ -102,6 +103,8 @@ export class MascotteStatut {
 
   private readonly timers = new Map<object, ReturnType<typeof setTimeout>>();
   private timerPhase?: ReturnType<typeof setTimeout>;
+  /** Plus longue série de pat-pat en cours. */
+  private pats = 0;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
@@ -141,6 +144,33 @@ export class MascotteStatut {
       }
     }
     return true;
+  }
+
+  /**
+   * Un pat-pat, le n-ième de la série : neutre, puis confus, puis il en a assez, puis écrasé et furieux.
+   */
+  tapoter(nombre: number): void {
+    this.pats = Math.max(this.pats, nombre);
+    if (nombre >= PATS_ECRASE) {
+      this.imposer('tresGrognon');
+      if (nombre === PATS_ECRASE) this.afficher('Mais ça va pas, mais t’es taré ! 😡');
+      return;
+    }
+    this.imposer(nombre >= PATS_CONFUS ? 'confus' : 'neutre');
+    if (nombre === 1) this.afficher('Oh djadja… 😳');
+    if (nombre === PATS_REFUS) this.afficher('Y a pas moyen djadja ! 😵');
+  }
+
+  /**
+   * Fin d'une série de pat-pat : ça défoule, il perd un niveau d'obésité.
+   * S'il a été écrasé il reste furieux jusqu'à la prochaine interaction.
+   */
+  finTapotage(): void {
+    if (this.pats === 0) return;
+    if (this.pats < PATS_ECRASE) this.imposer(null);
+    this.pats = 0;
+    if (this.surpoids() > 0) this.surpoids.update((s) => s - 1);
+    this.repasGaves.set(0);
   }
 
   /** On vole la nourriture : gamelle vidée, mascotte affamée (et elle reperd ses kilos). */
