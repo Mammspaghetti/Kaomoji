@@ -1,4 +1,5 @@
 import { Component, DestroyRef, WritableSignal, computed, inject, input, signal } from '@angular/core';
+import { MascotteEtat } from '../../mascotte-etat';
 import { MascotteStatut } from '../../mascotte-statut';
 import { Bowl } from '../bowl';
 
@@ -22,6 +23,7 @@ const POSITIONS = [
 })
 export class BowlView {
   protected readonly statut = inject(MascotteStatut);
+  protected readonly etat = inject(MascotteEtat);
   private readonly timers: ReturnType<typeof setTimeout>[] = [];
 
   readonly bowl = input.required<Bowl>();

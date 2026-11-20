@@ -35,8 +35,12 @@ export class MascotteStatut {
 
   /** 0 = rassasiée, 5 = affamée. Au-delà de 2 elle est grognon. */
   readonly faim = signal(2);
-  /** Croquettes mangées sans avoir faim. */
+  /** Niveau d'obésité, de 0 à `surpoidsMax` : +1 tous les `repasParNiveau` repas pris sans avoir faim. */
   readonly surpoids = signal(0);
+  /** Repas pris sans avoir faim depuis le dernier niveau d'obésité. */
+  readonly repasGaves = signal(0);
+  /** Repas gavés qu'il faut pour gagner un niveau d'obésité (= une gamelle pleine). */
+  readonly repasParNiveau = 5;
   readonly cadeaux = signal(1);
   /** Monte quand un rival reçoit un cadeau, baisse quand elle en reçoit un. */
   readonly niveauJalousie = signal(0);
@@ -126,9 +130,15 @@ export class MascotteStatut {
     } else if (this.faim() > 0) {
       this.faim.update((f) => f - 1);
     } else {
-      this.surpoids.update((s) => s + 1);
-      this.afficher(this.isGave() ? 'JE VAIS EXPLOSER ! 🤢' : 'J’AI PLUS FAIM ! 🐷');
-      if (this.isGave()) this.programmerExplosion();
+      this.repasGaves.update((n) => n + 1);
+      if (this.repasGaves() < this.repasParNiveau) {
+        this.afficher('J’AI PLUS FAIM ! 🐷');
+      } else {
+        this.repasGaves.set(0);
+        this.surpoids.update((s) => s + 1);
+        this.afficher(this.isGave() ? 'JE VAIS EXPLOSER ! 🤢' : 'JE GROSSIS ! 🐷');
+        if (this.isGave()) this.programmerExplosion();
+      }
     }
     return true;
   }
@@ -139,6 +149,7 @@ export class MascotteStatut {
     this.imposer(null);
     this.faim.set(this.faimMax);
     this.surpoids.set(0);
+    this.repasGaves.set(0);
     this.programmer(this.isVole, true, false, DUREE_COURTE);
   }
 
@@ -196,6 +207,7 @@ export class MascotteStatut {
   private reapparaitre(): void {
     this.phase.set('normal');
     this.surpoids.set(0);
+    this.repasGaves.set(0);
     this.taille.set(0);
     this.faim.set(this.faimMax);
     this.imposer(null);

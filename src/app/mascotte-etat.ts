@@ -4,7 +4,7 @@ import { MascotteStatut } from './mascotte-statut';
 
 const CLE_STOCKAGE = 'kaomoji.visages';
 const CLE_NOM = 'kaomoji.nom';
-const NOM_PAR_DEFAUT = 'Kaomoji-san';
+const NOM_PAR_DEFAUT = 'Kaomoji';
 const LONGUEUR_MAX = 30;
 
 type VisagesPerso = Partial<Record<Humeur, string>>;

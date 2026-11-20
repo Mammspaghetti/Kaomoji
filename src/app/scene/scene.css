@@ -40,8 +40,6 @@
     pointer-events: none;
 }
 
-.mascotte-nom { font-size: 19px; font-weight: 900; color: #bd392e; margin-bottom: 8px; }
-
 /* Bandeau : message temporaire, ou STOP de plus en plus gros */
 .bandeau-zone {
     height: 70px;
@@ -139,6 +137,15 @@
 /* Téléphone : personnage un peu plus petit, moins de place réservée à la gamelle */
 @media (max-width: 767px) {
     :host { --zoom-base: 1.1; }
-    .personnage { padding-bottom: 200px; }
-    .mascotte-nom { margin-top: 40px; } /* sous le bouton ☰ */
+    .personnage { padding-bottom: 170px; }
+    /* Messages en haut de la scène (sous le bouton ☰), devant le personnage : il grossit
+       vers le haut et ne doit jamais les cacher */
+    .bandeau-zone {
+        position: absolute;
+        top: 52px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        z-index: 10;
+    }
 }

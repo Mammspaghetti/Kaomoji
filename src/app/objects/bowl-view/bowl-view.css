@@ -58,7 +58,17 @@
     background: #ffe8c9;
     opacity: 0.6;
 }
-.bol-nom { font-size: 16px; font-weight: 900; color: #fff5d6; letter-spacing: 2px; text-shadow: 2px 2px 0 #55352c; }
+.bol-nom {
+    max-width: 95px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 900;
+    color: #fff5d6;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #55352c;
+}
 
 /* Ombre au sol */
 .bol-ombre { position: absolute; left: 15px; right: 15px; bottom: 0; height: 8px; border-radius: 50%; background: rgba(85, 53, 44, 0.25); }
@@ -78,7 +88,15 @@
 }
 
 /* Boutons */
-.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+/* Nourrir et Remplir sur une ligne, Voler en dessous (aussi sur téléphone) */
+.actions {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+.actions .voler { grid-column: 1 / -1; justify-self: center; }
 .actions button {
     padding: 4px 10px;
     font: inherit;
@@ -101,6 +119,11 @@
     25% { transform: rotate(-6deg) translateY(-3px); }
     50% { transform: rotate(5deg); }
     75% { transform: rotate(-3deg); }
+}
+
+/* Téléphone : gamelle plus bas, pour laisser de la place au personnage qui grossit */
+@media (max-width: 767px) {
+    :host { translate: 0 -10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

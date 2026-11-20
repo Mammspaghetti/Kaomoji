@@ -24,7 +24,7 @@ describe('Scene', () => {
     expect(el.querySelector('.fond')).toBeTruthy();
     expect(el.querySelectorAll('.objets app-object').length).toBe(createDefaultObjects().length);
     expect(el.querySelector('.personnage app-kaomoji-face')).toBeTruthy();
-    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('Kaomoji-san');
+    expect(el.querySelector('.bol-nom')?.textContent).toContain('Kaomoji');
   });
 
   describe('pat-pat', () => {
@@ -63,7 +63,7 @@ describe('Scene', () => {
   it('affiche le nom du personnage et suit son renommage', async () => {
     TestBed.inject(MascotteEtat).renommer('Mochi');
     await fixture.whenStable();
-    expect(el.querySelector('.mascotte-nom')?.textContent).toContain('Mochi');
+    expect(el.querySelector('.bol-nom')?.textContent).toContain('Mochi');
   });
 
   it("affiche le visage de l'émotion choisie", async () => {
@@ -83,6 +83,7 @@ describe('Scene', () => {
   it('gaver la mascotte affiche un STOP et change son visage', async () => {
     const statut = TestBed.inject(MascotteStatut);
     statut.faim.set(0);
+    statut.repasGaves.set(statut.repasParNiveau - 1); // le repas suivant fait grossir
     bouton('Nourrir').click();
     await fixture.whenStable();
     expect(statut.humeur()).toBe('gros');

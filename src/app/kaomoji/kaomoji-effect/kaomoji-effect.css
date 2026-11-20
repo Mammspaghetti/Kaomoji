@@ -49,29 +49,3 @@
     :host(.effet-pat-2)::after,
     :host(.effet-pat-3)::after { animation: none; }
 }
-
-/* Main gantée qui tapote, au-dessus de la tête */
-.main {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    width: 4.2rem;
-    margin-left: -2.1rem;
-    translate: 0 -14px;
-    pointer-events: none;
-    z-index: 7;
-    overflow: visible;
-}
-.main .gant,
-.main .pouce {
-    fill: #fff;
-    stroke: #55352c;
-    stroke-width: 3;
-    stroke-linejoin: round;
-}
-.main .doigts {
-    fill: none;
-    stroke: #55352c;
-    stroke-width: 2;
-    stroke-linecap: round;
-}

@@ -68,7 +68,7 @@ describe('NavBar', () => {
   it('renomme le personnage et conserve le nom', async () => {
     const el: HTMLElement = fixture.nativeElement;
     const champ = el.querySelector<HTMLInputElement>('.renommer input')!;
-    expect(champ.value).toBe('Kaomoji-san');
+    expect(champ.value).toBe('Kaomoji');
     champ.value = '  Mochi ';
     el.querySelector<HTMLFormElement>('.renommer')!.dispatchEvent(new Event('submit'));
     await fixture.whenStable();
@@ -82,8 +82,8 @@ describe('NavBar', () => {
     champ.value = '   ';
     el.querySelector<HTMLFormElement>('.renommer')!.dispatchEvent(new Event('submit'));
     await fixture.whenStable();
-    expect(etat.nom()).toBe('Kaomoji-san');
-    expect(champ.value).toBe('Kaomoji-san');
+    expect(etat.nom()).toBe('Kaomoji');
+    expect(champ.value).toBe('Kaomoji');
   });
 
   it('les interactions font réagir le statut', async () => {

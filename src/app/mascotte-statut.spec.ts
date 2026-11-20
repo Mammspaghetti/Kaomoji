@@ -27,20 +27,27 @@ describe('MascotteStatut', () => {
   });
 
   it('mange : la faim baisse, puis elle grossit, puis elle est gavée', () => {
-    const g = gamelle();
+    const g = gamelle(40);
     s.manger(g);
     s.manger(g);
     expect(s.faim()).toBe(0);
     expect(s.humeur()).toBe('neutre');
 
+    // +1 niveau d'obésité tous les 5 repas : 4 repas ne suffisent pas
+    for (let i = 0; i < s.repasParNiveau - 1; i++) s.manger(g);
+    expect(s.surpoids()).toBe(0);
+    expect(s.humeur()).toBe('neutre');
     s.manger(g);
+    expect(s.surpoids()).toBe(1);
     expect(s.humeur()).toBe('gros');
     expect(s.bandeau()).toMatchObject({ type: 'message' });
 
-    for (let i = 1; i < s.surpoidsMax; i++) s.manger(g);
+    // 5 gamelles pleines de plus et elle est gavée
+    for (let i = 0; i < (s.surpoidsMax - 1) * s.repasParNiveau; i++) s.manger(g);
+    expect(s.surpoids()).toBe(s.surpoidsMax);
     expect(s.humeur()).toBe('gave');
     expect(s.manger(g)).toBe(false);
-    expect(g.level()).toBe(20 - 7);
+    expect(g.level()).toBe(40 - 2 - s.surpoidsMax * s.repasParNiveau);
   });
 
   it('ne mange pas quand la gamelle est vide', () => {
@@ -115,6 +122,7 @@ describe('MascotteStatut', () => {
     const gaver = (g: Bowl) => {
       s.faim.set(0);
       s.surpoids.set(s.surpoidsMax - 1);
+      s.repasGaves.set(s.repasParNiveau - 1);
       s.manger(g);
     };
 

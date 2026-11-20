@@ -66,16 +66,6 @@ describe('KaomojiEffect', () => {
     expect(pats).toEqual([1, 2, 3, 1]);
   });
 
-  it('montre une main pendant les pat-pat seulement', () => {
-    expect(hote().querySelector('.main')).toBeNull();
-    hote().click();
-    fixture.detectChanges();
-    expect(hote().querySelector('.main')).toBeTruthy();
-    vi.advanceTimersByTime(1600);
-    fixture.detectChanges();
-    expect(hote().querySelector('.main')).toBeNull();
-  });
-
   it('se calme après un moment sans tapotement', () => {
     hote().click();
     fixture.detectChanges();

@@ -1,4 +1,4 @@
-import { Component, ElementRef, computed, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, output, signal } from '@angular/core';
 
 export type Niveau = 0 | 1 | 2 | 3;
 export type NiveauGros = Niveau | 4 | 5;
@@ -42,21 +42,7 @@ const PATS: Record<1 | 2 | 3, Keyframe[]> = {
     '[class]': 'classe()',
     '(click)': 'tapoter()',
   },
-  template: `
-    <ng-content />
-    @if (tapote() > 0) {
-      <!-- Main gantée blanche, à plat, paume vers le bas (vue de côté) -->
-      <svg #main class="main" viewBox="0 0 92 52" aria-hidden="true">
-        <path class="pouce" d="M24 34 C26 46 48 46 52 34 Z" />
-        <path
-          class="gant"
-          d="M14 15 H62 C74 15 88 17 89 23 C90 29 84 34 74 34 H14 Z"
-        />
-        <path class="doigts" d="M58 21 H84 M56 27.5 H85" />
-        <rect class="gant" x="3" y="11" width="13" height="27" rx="5" />
-      </svg>
-    }
-  `,
+  template: '<ng-content />',
   styleUrl: './kaomoji-effect.css',
 })
 export class KaomojiEffect {
@@ -70,7 +56,6 @@ export class KaomojiEffect {
   /** Émis quand la série de pat-pat est terminée. */
   readonly calme = output<void>();
 
-  private readonly main = viewChild<ElementRef<SVGElement>>('main');
   private readonly serie = signal(0);
 
   /** Niveau de pat-pat en cours (0 = calme). */
@@ -93,27 +78,12 @@ export class KaomojiEffect {
     this.serie.update((n) => n + 1);
     this.pat.emit(this.serie());
     this.jouer(niveau);
-    this.baisserMain();
   }
 
   private apaiser(): void {
     this.tapote.set(0);
     this.serie.set(0);
     this.calme.emit();
-  }
-
-  /** La main s'abaisse sur la tête à chaque pat-pat. */
-  private baisserMain(): void {
-    // la main n'existe qu'après le prochain rendu
-    queueMicrotask(() => {
-      const el = this.main()?.nativeElement;
-      if (typeof el?.animate !== 'function') return;
-      if (globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-      el.animate(
-        [{ translate: '0 -14px' }, { translate: '0 8px', offset: 0.4 }, { translate: '0 -14px' }],
-        { duration: 280, easing: 'ease-out' },
-      );
-    });
   }
 
   /** Relance l'animation à chaque clic, sans se battre avec le « gros » (composition additive). */
