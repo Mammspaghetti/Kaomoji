@@ -152,6 +152,17 @@
     min-width: 0;
 }
 
+/* Bouton Succès, en bas de la barre */
+.succes-btn {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff3c4;
+    font-weight: 700;
+}
+.succes-compte { font-size: 0.8rem; }
+
 /* Formulaire d'import */
 .import {
     display: flex;

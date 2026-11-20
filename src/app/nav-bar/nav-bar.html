@@ -31,6 +31,12 @@
         </button>
     </form>
 
+    <!-- Succès : la fenêtre est dans la page (pas ici, la barre est inerte quand elle est fermée) -->
+    <button type="button" class="nav-btn succes-btn" (click)="succes.ouvrir()">
+        <span><span aria-hidden="true">🏆</span> Succès</span>
+        <span class="succes-compte">{{ succes.nombre() }}/{{ succes.liste.length }}</span>
+    </button>
+
     <!-- Interactions : elles font réagir le statut de la mascotte -->
     <h3 class="nav-titre">Interactions</h3>
     <button class="nav-btn interaction" (click)="statut.offrirCadeau()">🎁 Offrir un cadeau</button>
@@ -99,4 +105,5 @@
         </select>
         <button type="submit" class="nav-btn nav-btn-accent">Associer</button>
     </form>
+
 </nav>

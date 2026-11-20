@@ -1,0 +1,33 @@
+@if (succes.ouvert()) {
+    <div class="voile" (click)="succes.fermer()">
+        <div
+            class="fenetre"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="succes-titre"
+            (click)="$event.stopPropagation()"
+        >
+            <header>
+                <h2 id="succes-titre">🏆 Succès</h2>
+                <span class="compte">{{ succes.nombre() }}/{{ succes.liste.length }}</span>
+                <button type="button" class="fermer" aria-label="Fermer" (click)="succes.fermer()">
+                    ✕
+                </button>
+            </header>
+
+            <ul>
+                @for (s of succes.liste; track s.id) {
+                    <li [class.debloque]="succes.estDebloque(s.id)">
+                        <span class="icone" aria-hidden="true">{{
+                            succes.estDebloque(s.id) ? '🏆' : '🔒'
+                        }}</span>
+                        <div>
+                            <strong>{{ s.titre }}</strong>
+                            <small>{{ s.description }}</small>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

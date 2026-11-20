@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { HUMEURS, Humeur, LIBELLES } from '../kaomoji/kaomoji-face/humeur';
 import { MascotteEtat } from '../mascotte-etat';
 import { MascotteStatut } from '../mascotte-statut';
+import { Succes } from '../succes/succes';
 
 @Component({
   selector: 'app-nav-bar',
@@ -12,6 +13,7 @@ import { MascotteStatut } from '../mascotte-statut';
 export class NavBar {
   protected readonly etat = inject(MascotteEtat);
   protected readonly statut = inject(MascotteStatut);
+  protected readonly succes = inject(Succes);
   protected readonly humeurs = HUMEURS;
   protected readonly libelles = LIBELLES;
 

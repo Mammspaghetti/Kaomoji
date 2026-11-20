@@ -103,6 +103,8 @@ export class MascotteStatut {
 
   private readonly timers = new Map<object, ReturnType<typeof setTimeout>>();
   private timerPhase?: ReturnType<typeof setTimeout>;
+  /** Nombre de fois où il a été écrasé à force de pat-pat. */
+  readonly ecrasements = signal(0);
   /** Plus longue série de pat-pat en cours. */
   private pats = 0;
 
@@ -153,7 +155,10 @@ export class MascotteStatut {
     this.pats = Math.max(this.pats, nombre);
     if (nombre >= PATS_ECRASE) {
       this.imposer('tresGrognon');
-      if (nombre === PATS_ECRASE) this.afficher('Mais ça va pas, mais t’es taré ! 😡');
+      if (nombre === PATS_ECRASE) {
+        this.ecrasements.update((n) => n + 1);
+        this.afficher('Mais ça va pas, mais t’es taré ! 😡');
+      }
       return;
     }
     this.imposer(nombre >= PATS_CONFUS ? 'confus' : 'neutre');
